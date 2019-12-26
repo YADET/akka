@@ -3,7 +3,6 @@
 *.class
 *.log
 bin/
-project/
 target/
 build/
 *.class
@@ -19,7 +18,6 @@ target/
 lib_managed/
 src_managed/
 project/boot/
-project/plugins/project/
 project/target/
 target/
 ./.idea
