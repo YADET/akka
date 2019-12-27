@@ -1,8 +1,7 @@
 package com.HPC
 
-import akka.actor.{Actor, ActorRef}
-import Master.{ Wordcountreply, Wordcounttask}
-import Worker.Account
+import akka.actor.{Actor, ActorLogging, ActorRef}
+import Master.{Wordcountreply, Wordcounttask}
 
 
 
@@ -10,13 +9,13 @@ object Worker{
   case class Account(actorref: ActorRef)
 }
 
-class Worker extends Actor{
+class Worker extends Actor with ActorLogging{
 
 
   override def receive: Receive = {
 
     case Wordcounttask(id, text) =>
-      println(s"[worker] I got the task id ${id}")
+      log.info(s"the worker id is ${id}")
       sender() ! Wordcountreply(id, text.split(" ").length)
   }
 }
