@@ -1,20 +1,22 @@
 package com.HPC
 
 import akka.actor.{Actor, ActorLogging, ActorRef, Props}
-import com.HPC.Master.{Wordcountreply, Wordcounttask, initialize}
+import com.HPC.Master.{InitializationAck, Wordcountreply, Wordcounttask, Initialize}
 
 
 object Master{
-  case class initialize(nworkers: Int)
+  case class Initialize(nworkers: Int)
   case class Wordcounttask(id:Int,text:String)
   case class Wordcountreply(id:Int,count:Int)
+  case object InitializationAck
 }
 
 class Master extends Actor with ActorLogging{
 
   override def receive: Receive = {
 
-    case initialize(nworkers) =>
+    case Initialize(nworkers) =>
+      sender() ! InitializationAck
       val workerRefs= for (i <- 1 to nworkers) yield context.actorOf(Props[Worker],s"worker_${i}")
       log.info(s"the number of initialaized workers are ${nworkers}")
       context.become(workers(workerRefs,0,0,Map()))

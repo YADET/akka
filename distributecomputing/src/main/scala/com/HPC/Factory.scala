@@ -1,19 +1,36 @@
 package com.HPC
 
 import akka.actor.{Actor, Props}
-import com.HPC.Master.initialize
+import com.HPC.Master.Initialize
 
-class Factory extends Actor{
+
+object Factory {
+
+  def props(initnumber:Int,texts:List[String])= Props(new Factory(initnumber,texts))
+}
+
+class Factory(initnumber:Int,texts:List[String]) extends Actor{
+
+  var numberofworkers=0
+  var collection=0
 
   override def receive: Receive = {
 
     case "start" =>
       val master=context.actorOf(Props[Master], "master")
-      master ! initialize(4)
-      val texts=List("hi", "here i am","second one","did that carefully","new men")
+      master ! Initialize(initnumber)
       texts.foreach(text => master ! text)
+      numberofworkers+=initnumber
+      context.become(collector(0))
+  }
+
+
+  def collector(totalcount: Int):Receive={
+
     case count: Int =>
-      println(s"Here is the count ${count}")
+      collection+=count
+      println(s"Here is the last count ${collection}")
+      context.become(collector(collection))
 
   }
 

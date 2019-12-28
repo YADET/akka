@@ -13,3 +13,10 @@ libraryDependencies ++=Seq(
   "com.typesafe.akka" %% "akka-testkit" % akkaVersion,
   "org.scalatest" %% "scalatest" % "3.0.5"
 )
+
+
+val ReleaseCommand = Command.command("release") {
+  state =>
+    "clean"  :: "compile" :: "test" :: state
+}
+commands += ReleaseCommand
